@@ -17,7 +17,7 @@
 
 namespace mapbox { namespace util {
 
-template <typename T>
+template <typename T, typename E = void>
 struct recursive_wrapper_traits
 {
     static constexpr bool is_nothrow_destructible = true;
@@ -78,8 +78,11 @@ public:
     recursive_wrapper(T const& operand)
         : p_(new T(operand)) {}
 
-    recursive_wrapper(recursive_wrapper && operand)
-        : p_(new T(std::move(operand.get()))) {}
+    recursive_wrapper(recursive_wrapper && operand) noexcept
+        : p_(operand.p_)
+    {
+        operand.p_ = nullptr;
+    }
 
     recursive_wrapper(T && operand)
         : p_(new T(std::move(operand))) {}

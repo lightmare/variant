@@ -628,6 +628,7 @@ public:
     }
 
     VARIANT_INLINE variant(variant<Types...> const& old)
+        noexcept(std::is_nothrow_copy_constructible<std::tuple<Types...>>::value)
         : type_index(old.type_index)
     {
         helper_type::copy(old.type_index, &old.data, &data);
@@ -672,6 +673,7 @@ public:
 
     // conversions
     // move-assign
+    /*
     template <typename T>
     VARIANT_INLINE variant<Types...>& operator=(T && rhs) noexcept
     {
@@ -688,6 +690,7 @@ public:
         copy_assign(temp);
         return *this;
     }
+    */
 
     template <typename T>
     VARIANT_INLINE bool is() const
